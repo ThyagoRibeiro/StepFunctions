@@ -1,0 +1,124 @@
+{
+  "Comment": "This is your state machine",
+  "StartAt": "Cria query job",
+  "States": {
+    "Cria query job": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "arn:aws:lambda:sa-east-1:167215075805:function:SalesforceBulkApiCreate:$LATEST"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "Map"
+    },
+    "Map": {
+      "Type": "Map",
+      "Next": "Recebe resultados",
+      "Iterator": {
+        "StartAt": "Verifica se job foi concluído",
+        "States": {
+          "Verifica se job foi concluído": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "OutputPath": "$.Payload",
+            "Parameters": {
+              "Payload.$": "$",
+              "FunctionName": "arn:aws:lambda:sa-east-1:167215075805:function:SalesforceBulkApiGetInformation:$LATEST"
+            },
+            "Retry": [
+              {
+                "ErrorEquals": [
+                  "Lambda.ServiceException",
+                  "Lambda.AWSLambdaException",
+                  "Lambda.SdkClientException"
+                ],
+                "IntervalSeconds": 2,
+                "MaxAttempts": 6,
+                "BackoffRate": 2
+              }
+            ],
+            "Next": "Choice"
+          },
+          "Choice": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Or": [
+                  {
+                    "Variable": "$.state",
+                    "StringEquals": "UploadComplete"
+                  },
+                  {
+                    "Variable": "$.state",
+                    "StringEquals": "JobComplete"
+                  }
+                ],
+                "Next": "Success"
+              },
+              {
+                "Or": [
+                  {
+                    "Variable": "$.state",
+                    "StringEquals": "Aborted"
+                  },
+                  {
+                    "Variable": "$.state",
+                    "StringEquals": "Failed"
+                  }
+                ],
+                "Next": "Fail"
+              }
+            ],
+            "Default": "Wait"
+          },
+          "Success": {
+            "Type": "Succeed"
+          },
+          "Wait": {
+            "Type": "Wait",
+            "Seconds": 5,
+            "Next": "Verifica se job foi concluído"
+          },
+          "Fail": {
+            "Type": "Fail"
+          }
+        }
+      }
+    },
+    "Recebe resultados": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "arn:aws:lambda:sa-east-1:167215075805:function:SalesforceBulkApiGetResults:$LATEST"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "End": true
+    }
+  }
+}
