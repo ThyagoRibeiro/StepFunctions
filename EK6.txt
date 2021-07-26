@@ -1,0 +1,164 @@
+Stories Sprint 1
+
+    Criar tópicos Kafka Jornada PJ
+        - Descrição:
+            Criar tópicos Kafka Jornada PJ
+        - Documentos:
+            Não possui
+        - DOR:
+            Não possui
+        - DOD:
+            Tópicos Kafka Jornada PJ criados
+
+    Criar grupos e usuários genéricos Kafka
+        - Descrição:
+            Criar grupos e usuários genéricos Kafka
+        - Documentos:
+            Não possui
+        - DOR:
+            Não possui
+        - DOD:
+            Grupos e usuários genéricos Kafka criados
+
+    Criar SiglasApps
+        - Descrição:
+            Criar SiglasApps das aplicações:
+                Lambda - Ouvir Tópico Kafka Envio Jornada PJ
+                Lambda - Publicar Tópico Kafka Jornada PJ
+                Lambda - Validar Jornada PJ
+                Lambda - Transformar Salesforce Jornada PJ
+                Lambda - Enviar Salesforce
+                Lambda - Solicitar Poderes
+        - Documentos:
+            Não possui
+        - DOR:
+            Não possui
+        - DOD:
+            Grupos e usuários genéricos Kafka criados
+
+    Criar Credenciais de SiglasApps e cadastrar no Secret Manager
+        - Descrição:
+            Criar credenciais das SiglasApps e cadastrá-los no secret manager das aplicações:
+                Lambda - Enviar Salesforce
+                Lambda - Solicitar Poderes
+        - Documentos:
+            Não possui
+        - DOR:
+            SiglasApps criadas
+        - DOD:
+            Credenciais das SiglasApps criadas
+
+    Criar Lambdas e Step Functions Envio Jornada PJ
+        - Descrição:
+            Criar lambdas:
+                Lambda - Ouvir Tópico Kafka Envio Jornada PJ
+                Lambda - Publicar Tópico Kafka Jornada PJ
+                Lambda - Validar Jornada PJ
+                Lambda - Transformar Salesforce Jornada PJ
+                Lambda - Enviar Salesforce
+                Lambda - Solicitar Poderes
+            Criar Step Functions e linkar com os lambdas conforme desenho
+        - Documentos:
+            Confluence, FQ7 e desenho de solução
+        - DOR:
+            SiglasApps criadas
+        - DOD:
+            Step Functions criado com fluxo estabelecido
+
+Stories Sprint 2
+
+    Lambda - Ouvir Tópico Kafka Envio Jornada PJ
+        - Descrição:
+            Ouve tópico Kafka e chama Step Functions Envio Jornada PJ
+            Somente retirar mensagem do tópico quando a chamada ao Step Functions Envio Jornada PJ devolver sucesso
+        - Documentos: 
+            iKafka
+        - DOR:
+            SiglaApp, grupos, usuário genérico, tópico Kafka criado e Step Functions Envio Jornada PJ criado
+        - DOD:
+            Ouvir tópico Kafka e enviar mensagem para Step Functions
+
+    Lambda - Publicar Tópico Kafka Jornada PJ
+        - Descrição:
+            Publica no tópico Kafka
+        - Documentos: 
+            iKafka
+        - DOR:
+            SiglaApp, grupos, usuário genérico e tópico Kafka criado
+        - DOD:
+            Mensagem publicada no tópico Kafka
+
+    Lambda - Validar Jornada PJ
+        - Descrição:
+            Valida dados da proposta
+        - Documentos: 
+            Documento de descrição, domínio e obrigatoriedade de campos
+        - DOR:
+            SiglaApp e documentação de validação
+        - DOD:
+            Campos validados
+        
+    Lambda - Transformar Salesforce Jornada PJ
+        - Descrição:
+            Transforma domínio EK6 para registros de objetos Salesforce e retornar
+        - Documentos: 
+            Documento de transformação de dados EK6 para Salesforce
+        - DOR:
+            SiglaApp e documentação de transformação
+        - DOD:
+            Campos transformados
+        
+    Lambda - Enviar Salesforce
+        - Descrição:
+            Recebe registros de objetos Salesforce e envia para Salesforce via Gateway Binário Outbound
+            Deve possuir no máximo 500 registros por chamada
+            Validar se cada chamada deu certo
+        - Documentos: 
+            https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/using_resources_composite_graph.htm
+        - DOR:
+            SiglaApp, credenciais da SiglaApp e Salesforce no Secret Manager
+        - DOD:
+            Dados enviados para a Salesforce com sucesso
+        
+    Lambda - Solicitar Poderes
+        - Descrição:
+            Realizar chamada de enriquecimento de poderes
+        - DOR:
+            SiglaApp e credenciais da SiglaApp
+        - DOD:
+            Solicitação de poderes chegou na Salesforce
+
+
+    Salesforce - Abrir caso Poderes Salesforce
+        - Descrição:
+            Abrir caso de poderes quando payloads do CB7 e DT forem enviados
+        - DOR:
+            Payload de proposta
+        - DOD:
+            Caso de poderes aberto somente quando payloads do CB7 e DT forem enviados
+
+    Salesforce - Remover diff Salesforce
+        - Descrição:
+            Remover diff de saída da Salesforce, enviando todos os payloads quando a proposta chegar via fluxo modernizado
+        - DOR:
+            Não possui
+        - DOD:
+            Step Functions criado
+
+    Salesforce - Testar Salesforce
+        - Descrição:
+            Testar propostas enviadas de Cockpit e conta online, incluindo devoluções
+        - DOR:
+            Não possui
+        - DOD:
+            Step Functions criado
+
+-----
+
+Alana
+Felipe
+Adriano
+Leonardo
+Mikael
+Rafael Eduardo
+Rafael Lemes
